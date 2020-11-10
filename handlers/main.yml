@@ -1,0 +1,6 @@
+---
+# handlers file for elastic-beats-modules
+- name: restart {{ elastic_beats_modules_beat }}
+  service:
+    name: "{{ elastic_beats_modules_beat }}"
+    state: restarted

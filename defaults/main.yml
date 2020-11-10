@@ -1,0 +1,17 @@
+---
+# defaults file for elastic-beats-modules
+elastic_beats_modules_beat: filebeat
+elastic_beats_modules_executable: /usr/bin/"{{ elastic_beats_modules_beat }}"
+
+
+elastic_beats_modules_tmp: /tmp/
+elastic_beats_modules_destination: /usr/share/{{ elastic_beats_modules_beat }}/module
+elastic_beats_modules_config_dir: /etc/{{ elastic_beats_modules_beat }}/modules.d
+
+
+elastic_beats_modules: []
+# example:
+#
+# elastic_beats_modules:
+#     - module: systemd
+#       enabled: yes

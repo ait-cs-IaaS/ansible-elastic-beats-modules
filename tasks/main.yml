@@ -1,0 +1,64 @@
+---
+# tasks file for elastic-beats-modules
+
+- name: Checking if {{ elastic_beats_modules_beat }} module folder file exists
+  stat:
+    path: "{{ elastic_beats_modules_destination }}/{{ item.module }}"
+  register: module_folder_info
+  when:  item.url is defined and item.url|length
+  loop: "{{ elastic_beats_modules }}"
+
+- name: test
+  debug:
+    var: module_folder_info
+
+- name: Download {{ elastic_beats_modules_beat }} module package
+  get_url:
+    url: "{{ item.item.url }}/{{ item.item.package }}"
+    dest: "{{ elastic_beats_modules_tmp }}"
+  when: item.skipped is not defined and not item.stat.exists
+  loop: "{{ module_folder_info.results }}"
+
+- name: Unpacking {{ elastic_beats_modules_beat }} module package
+  unarchive:
+    src: "{{ elastic_beats_modules_tmp }}/{{ item.item.package }}"
+    dest: "{{ elastic_beats_modules_destination }}/"
+    remote_src: yes
+  notify: restart {{ elastic_beats_modules_beat }}
+  when: item.skipped is not defined and not item.stat.exists
+  loop: "{{ module_folder_info.results }}"
+
+- name: Setting 0755 permission for {{ elastic_beats_modules_beat }} module folder
+  file:
+    path: "{{ elastic_beats_modules_destination }}/{{ item.item.module }}"
+    mode: 0755
+    recurse: yes
+  when: item.skipped is not defined and not item.stat.exists
+  loop: "{{ module_folder_info.results }}"
+
+- name: Create {{ elastic_beats_modules_beat }} module config
+  template:
+    src: module.yml.j2
+    dest: "{{ elastic_beats_modules_config_dir }}/{{ item.module }}.yml{{ '.disabled' if not (item.enabled | default(True)) }}"
+    mode: "0644"
+  notify: restart {{ elastic_beats_modules_beat }}
+  when: item.config is defined
+  loop: "{{ elastic_beats_modules }}"
+
+- name: Ensure only one {{ elastic_beats_modules_beat }} module config exists
+  file:
+    # ensure that .disabled file does not exist if enabled=True and inverse
+    path: "{{ elastic_beats_modules_config_dir }}/{{ item.module }}.yml{{ '.disabled' if (item.enabled | default(True)) }}"
+    state: absent
+  notify: restart {{ elastic_beats_modules_beat }}
+  when: item.config is defined
+  loop: "{{ elastic_beats_modules }}"
+
+- name: Enable/Disable modules for {{ elastic_beats_modules_beat }}
+  become: yes
+  command: "{{ elastic_beats_modules_executable }} modules {{ 'enable' if (item.enabled | default(True)) else 'disable' }} {{ item.module }}"
+  register: module_out
+  changed_when: "'is already' not in module_out.stdout and 'is already' not in module_out.stderr"
+  loop: "{{ elastic_beats_modules }}"
+  notify: restart {{ elastic_beats_modules_beat }}
+

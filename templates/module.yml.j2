@@ -1,0 +1,7 @@
+# Module: {{ item.module }}
+{% if item.docs is defined %}
+# Docs: {{ item.docs }}
+{% endif %}
+
+- module: {{ item.module }}
+{{ item.config | default({}) | to_nice_yaml(indent=2) | indent(2, indentfirst=True) }}
