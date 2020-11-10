@@ -34,8 +34,6 @@ Role Variables
 *\*Note that not all beats support modules via module directory.*
 *\*\*Note that this must be set for remotely installed modules*
 
-### elastic_beats_modules
-
 Example Playbook
 ----------------
 
