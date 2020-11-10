@@ -8,10 +8,6 @@
   when:  item.url is defined and item.url|length
   loop: "{{ elastic_beats_modules }}"
 
-- name: test
-  debug:
-    var: module_folder_info
-
 - name: Download {{ elastic_beats_modules_beat }} module package
   get_url:
     url: "{{ item.item.url }}/{{ item.item.package }}"
