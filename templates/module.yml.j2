@@ -2,6 +2,13 @@
 {% if item.docs is defined %}
 # Docs: {{ item.docs }}
 {% endif %}
-
+{% if item.config is not defined or item.config is mapping %}
 - module: {{ item.module }}
 {{ item.config | default({}) | to_nice_yaml(indent=2) | indent(2, indentfirst=True) }}
+{% else %}
+{% for _config in item.config %}
+- module: {{ item.module }}
+{{ _config | default({}) | to_nice_yaml(indent=2) | indent(2, indentfirst=True) }}
+
+{% endfor %}
+{% endif %}

@@ -28,11 +28,12 @@ Role Variables
 | &nbsp;&nbsp;&nbsp;&nbsp;∟.enabled | bool       | true                                               | If the module should enabled or not           |
 | &nbsp;&nbsp;&nbsp;&nbsp;∟.url     | uri        |                                                    | Source URL to install from a remote source    |
 | &nbsp;&nbsp;&nbsp;&nbsp;∟.package | filename   |                                                    | Source package archive name                   |
-| &nbsp;&nbsp;&nbsp;&nbsp;∟.config  | dict       |                                                    | Custom module config\*\*                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;∟.config  | dict\*\* |                                                    | Custom module config\*\*\*                      |
 
 
 *\*Note that not all beats support modules via module directory.*
-*\*\*Note that this must be set for remotely installed modules*
+*\*\*Note that list of configs can be given for modules that allow for multiple configurations e.g., Metricbeat*
+*\*\*\*Note that this must be set for remotely installed modules*
 
 Example Playbook
 ----------------
