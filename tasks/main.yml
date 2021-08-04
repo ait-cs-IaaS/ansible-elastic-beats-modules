@@ -25,14 +25,23 @@
   when: item.skipped is not defined and not item.stat.exists
   loop: "{{ module_folder_info.results }}"
 
-- name: Setting 0755 permission for {{ elastic_beats_modules_beat }} module folder
+- name: Setting permissions for {{ elastic_beats_modules_beat }} module folder
   become: yes
   file:
     path: "{{ elastic_beats_modules_destination }}/{{ item.item.module }}"
-    mode: 0755
+    mode: u=rwX,g=rX,o=rX
     recurse: yes
   when: item.skipped is not defined and not item.stat.exists
   loop: "{{ module_folder_info.results }}"
+
+- name: Copy {{ elastic_beats_modules_beat }} modules from local source
+  become: yes
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ elastic_beats_modules_destination }}"
+    mode: u=rwX,g=rX,o=rX
+  when: item.src is defined
+  loop: "{{ elastic_beats_modules }}"
 
 - name: Create {{ elastic_beats_modules_beat }} module config
   become: yes
