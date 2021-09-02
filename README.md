@@ -1,10 +1,8 @@
-elastic-beats-modules
-=========
+# Ansible Role elastic-beats-modules
 
 Module for configuring elasticsearch beats modules
 
-Requirements
-------------
+## Requirements
 
 The targeted beat must already be installed and the following and `filebeat.config.modules.path` must be set e.g.,:
 
@@ -12,8 +10,7 @@ The targeted beat must already be installed and the following and `filebeat.conf
 filebeat.config.modules.path: ${path.config}/modules.d/*.yml
 ```
 
-Role Variables
---------------
+## Role Variables
 
 
 | Variable name                     | Type       | Default                                            | Description                                   |
@@ -35,8 +32,7 @@ Role Variables
 *\*\*Note that list of configs can be given for modules that allow for multiple configurations e.g., Metricbeat*
 *\*\*\*Note that this must be set for remotely installed modules*
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```yaml
     - hosts: servers
@@ -49,12 +45,7 @@ Example Playbook
               - module: suricata
                 enabled: false
 ```
-License
--------
 
-BSD
+## License
 
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+GPL-3.0
